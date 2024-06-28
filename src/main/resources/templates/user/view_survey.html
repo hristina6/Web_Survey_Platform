@@ -7,10 +7,21 @@
 <h1>Survey</h1>
 <h2 th:text="${survey.title}">Title</h2>
 <p th:text="${survey.description}">Description</p>
-<form th:action="@{/user/surveys/{id}/responses(id=${survey.id})}" method="post">
-    <div>
-        <label>Your Response:</label>
-        <input type="text" name="response"/>
+<form th:action="@{/user/surveys/{id}/responses(id=${survey.id})}" method="post" th:object="${responses}">
+    <div th:each="question : ${survey.questions}">
+        <h3 th:text="${question.text}">Question</h3>
+        <div th:each="answer : ${question.answers}">
+            <div th:if="${question.type == 'MULTIPLE_CHOICE'}">
+                <input type="checkbox" th:field="*{responses[__${question.id}__]}" th:value="${answer.id}"/>
+            </div>
+            <div th:if="${question.type == 'SINGLE_CHOICE'}">
+                <input type="radio" th:field="*{responses[__${question.id}__]}" th:value="${answer.id}"/>
+            </div>
+            <div th:if="${question.type == 'OPEN_QUESTION'}">
+                <input type="text" th:field="*{responses[__${question.id}__]}" />
+            </div>
+            <label th:text="${answer.text}">Answer</label>
+        </div>
     </div>
     <div>
         <button type="submit">Submit</button>

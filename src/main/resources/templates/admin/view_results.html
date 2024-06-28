@@ -6,14 +6,25 @@
 <body>
 <h1>Survey Results</h1>
 <table>
+    <thead>
     <tr>
         <th>User</th>
-        <th>Response</th>
+        <th>Question</th>
+        <th>Answer</th>
     </tr>
+    </thead>
+    <tbody>
     <tr th:each="response : ${responses}">
         <td th:text="${response.user.username}">User</td>
-        <td th:text="${response.response}">Response</td>
+        <td>
+            <ul>
+                <li th:each="entry : ${response.responses}">
+                    <span th:text="${entry.question.text}"></span>: <span th:text="${entry.answer.text}"></span>
+                </li>
+            </ul>
+        </td>
     </tr>
+    </tbody>
 </table>
 </body>
 </html>

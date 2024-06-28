@@ -2,17 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Survey</title>
+    <script>
+        function addQuestion() {
+            const questionsDiv = document.getElementById('questions');
+            const questionIndex = questionsDiv.children.length;
+            const questionDiv = document.createElement('div');
+            questionDiv.innerHTML = `
+                <div>
+                    <label>Question ${questionIndex + 1}:</label>
+                    <input type="text" name="questions[${questionIndex}].text" />
+                    <select name="questions[${questionIndex}].type">
+                        <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                        <option value="SINGLE_CHOICE">Single Choice</option>
+                        <option value="OPEN_QUESTION">Open Question</option>
+                    </select>
+                    <button type="button" onclick="addAnswer(this, ${questionIndex})">Add Answer</button>
+                </div>
+                <div id="answers-${questionIndex}"></div>
+            `;
+            questionsDiv.appendChild(questionDiv);
+        }
+
+        function addAnswer(button, questionIndex) {
+            const answersDiv = document.getElementById(`answers-${questionIndex}`);
+            const answerIndex = answersDiv.children.length;
+            const answerDiv = document.createElement('div');
+            answerDiv.innerHTML = `
+                <div>
+                    <label>Answer ${answerIndex + 1}:</label>
+                    <input type="text" name="questions[${questionIndex}].answers[${answerIndex}].text" />
+                    <input type="checkbox" name="questions[${questionIndex}].answers[${answerIndex}].correct" />
+                    <label>Correct</label>
+                </div>
+            `;
+            answersDiv.appendChild(answerDiv);
+        }
+    </script>
 </head>
 <body>
 <h1>Create Survey</h1>
 <form th:action="@{/admin/surveys}" method="post" th:object="${survey}">
     <div>
         <label>Title:</label>
-        <input type="text" th:field="*{title}"/>
+        <input type="text" th:field="*{title}" />
     </div>
     <div>
         <label>Description:</label>
-        <input type="text" th:field="*{description}"/>
+        <input type="text" th:field="*{description}" />
+    </div>
+    <div id="questions"></div>
+    <div>
+        <button type="button" onclick="addQuestion()">Add Question</button>
     </div>
     <div>
         <button type="submit">Create</button>

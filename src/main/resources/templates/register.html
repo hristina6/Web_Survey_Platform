@@ -1,10 +1,76 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Register</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Register</h1>-->
+<!--<form th:action="@{/register}" th:object="${user}" method="post">-->
+<!--    <div>-->
+<!--        <label>Username:</label>-->
+<!--        <input type="text" name="username" th:field="*{username}"/>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <label>Password:</label>-->
+<!--        <input type="password" name="password" th:field="*{password}"/>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <label>Role:</label>-->
+<!--        <select name="role" th:field="*{role}">-->
+<!--            <option value="ROLE_USER">User</option>-->
+<!--            <option value="ROLE_ADMIN">Admin</option>-->
+<!--        </select>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <button type="submit">Register</button>-->
+<!--    </div>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .register-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
-$END$
+<div class="container mt-5">
+    <div class="register-container">
+        <h1 class="text-center">Register</h1>
+        <form th:action="@{/register}" th:object="${user}" method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" th:field="*{username}" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" th:field="*{password}" required>
+            </div>
+            <div class="form-group">
+                    <select name="role" th:field="*{role}">
+                        <option value="ROLE_USER">User</option>
+                        <option value="ROLE_ADMIN">Admin</option>
+                    </select>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
