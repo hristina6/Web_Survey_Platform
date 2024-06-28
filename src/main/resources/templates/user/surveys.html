@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User - Surveys</title>
+</head>
+<body>
+<h1>Surveys</h1>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:each="survey : ${surveys}">
+    <td th:text="${survey.title}">Title</td>
+    <td th:text="${survey.description}">Description</td>
+    <td>
+      <a th:href="@{/user/surveys/{id}(id=${survey.id})}">Answer</a>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

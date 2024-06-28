@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Survey Results</title>
+</head>
+<body>
+<h1>Survey Results</h1>
+<table>
+    <tr>
+        <th>User</th>
+        <th>Response</th>
+    </tr>
+    <tr th:each="response : ${responses}">
+        <td th:text="${response.user.username}">User</td>
+        <td th:text="${response.response}">Response</td>
+    </tr>
+</table>
+</body>
+</html>

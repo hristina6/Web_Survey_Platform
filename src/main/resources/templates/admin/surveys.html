@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Surveys</title>
+</head>
+<body>
+<h1>Surveys</h1>
+<a th:href="@{/admin/surveys/new}">Create New Survey</a>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Published</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="survey : ${surveys}">
+        <td th:text="${survey.title}">Title</td>
+        <td th:text="${survey.description}">Description</td>
+        <td th:text="${survey.published}">Published</td>
+        <td>
+            <form th:action="@{/admin/surveys/publish/{id}(id=${survey.id})}" method="post">
+                <button type="submit">Publish</button>
+            </form>
+            <a th:href="@{/admin/surveys/results/{id}(id=${survey.id})}">View Results</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

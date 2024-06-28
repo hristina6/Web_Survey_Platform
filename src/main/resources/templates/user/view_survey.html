@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Survey</title>
+</head>
+<body>
+<h1>Survey</h1>
+<h2 th:text="${survey.title}">Title</h2>
+<p th:text="${survey.description}">Description</p>
+<form th:action="@{/user/surveys/{id}/responses(id=${survey.id})}" method="post">
+    <div>
+        <label>Your Response:</label>
+        <input type="text" name="response"/>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+</body>
+</html>

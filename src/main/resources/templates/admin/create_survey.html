@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Survey</title>
+</head>
+<body>
+<h1>Create Survey</h1>
+<form th:action="@{/admin/surveys}" method="post" th:object="${survey}">
+    <div>
+        <label>Title:</label>
+        <input type="text" th:field="*{title}"/>
+    </div>
+    <div>
+        <label>Description:</label>
+        <input type="text" th:field="*{description}"/>
+    </div>
+    <div>
+        <button type="submit">Create</button>
+    </div>
+</form>
+</body>
+</html>
