@@ -23,14 +23,21 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 
-    // Default constructor
-    public Question() {
+    public Question(Long questionId) {
     }
 
-    // Constructor with arguments
+
     public Question(String text) {
         this.text = text;
     }
 
-    // Getters and Setters
+    public Question(Long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
+    public Question() {
+
+    }
+
 }

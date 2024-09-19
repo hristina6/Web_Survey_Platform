@@ -1,31 +1,176 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>View Survey</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .navbar-nav {
+            flex-direction: row;
+        }
+        .navbar-nav .nav-item + .nav-item {
+            margin-left: 1rem;
+        }
+        .navbar-nav .ml-auto {
+            margin-left: auto;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .navbar-nav .nav-link {
+            font-size: 1rem;
+        }
+        .survey-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .survey-description {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        .form-check-input {
+            margin-right: 0.5rem;
+        }
+        .footer {
+            padding: 20px 0;
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            width: 100%;
+            bottom: 0;
+            margin-top: 70px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
+        }
+        .form-check-label {
+            margin-left: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-<h1>Survey</h1>
-<h2 th:text="${survey.title}">Title</h2>
-<p th:text="${survey.description}">Description</p>
-<form th:action="@{/user/surveys/{id}/responses(id=${survey.id})}" method="post" th:object="${responses}">
-    <div th:each="question : ${survey.questions}">
-        <h3 th:text="${question.text}">Question</h3>
-        <div th:each="answer : ${question.answers}">
-            <div th:if="${question.type == 'MULTIPLE_CHOICE'}">
-                <input type="checkbox" th:field="*{responses[__${question.id}__]}" th:value="${answer.id}"/>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Survey App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/feedback"><i class="fas fa-comments"></i> Give Feedback</a>
+            </li>
+            <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" th:href="@{/user/surveys}"><i class="fas fa-comments"></i> Surveys</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a>
+            </li>
+            <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" href="/logout" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            </li>
+            <li class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Log in</a>
+            </li>
+            <li class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Sign up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/account">
+                    <i class="fas fa-user-circle"></i> <span th:text="${username}"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container main-content">
+    <h1 class="survey-title mt-4" th:text="${survey.title}">Survey Title</h1>
+    <p class="survey-description" th:text="${survey.description}">Survey Description</p>
+    <form th:action="@{/user/surveys/{id}/responses(id=${survey.id})}" method="post" th:object="${responses}">
+        <div th:each="question : ${survey.questions}" class="card p-3 mb-3">
+            <h3 th:text="${question.text}">Question Text</h3>
+            <div>
+
+                <div th:if="${question.type == T(com.example.survey_app.models.QuestionType).MULTIPLE_CHOICE}">
+                    <ul class="list-unstyled">
+                        <li th:each="answer : ${question.answers}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" th:field="*{responses[__${question.id}__]}" th:value="${answer.id}" th:id="${'answer-' + answer.id}"/>
+                                <label class="form-check-label" th:for="${'answer-' + answer.id}" th:text="${answer.text}"></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div th:if="${question.type == T(com.example.survey_app.models.QuestionType).SINGLE_CHOICE}">
+                    <ul class="list-unstyled">
+                        <li th:each="answer : ${question.answers}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" th:field="*{responses[__${question.id}__]}" th:value="${answer.id}" th:id="${'answer-' + answer.id}"/>
+                                <label class="form-check-label" th:for="${'answer-' + answer.id}" th:text="${answer.text}"></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Handle OPEN_QUESTION -->
+                <div th:if="${question.type == T(com.example.survey_app.models.QuestionType).OPEN_QUESTION}">
+                    <div class="form-group">
+                        <textarea class="form-control" th:field="*{responses[__${question.id}__]}" rows="4" placeholder="Your answer here"></textarea>
+                    </div>
+                </div>
             </div>
-            <div th:if="${question.type == 'SINGLE_CHOICE'}">
-                <input type="radio" th:field="*{responses[__${question.id}__]}" th:value="${answer.id}"/>
-            </div>
-            <div th:if="${question.type == 'OPEN_QUESTION'}">
-                <input type="text" th:field="*{responses[__${question.id}__]}" />
-            </div>
-            <label th:text="${answer.text}">Answer</label>
         </div>
-    </div>
-    <div>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div class="footer">
+    <p>&copy; 2024 Survey App. All rights reserved.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

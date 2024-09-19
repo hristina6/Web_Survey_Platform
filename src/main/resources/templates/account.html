@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Account</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .navbar-nav {
+            flex-direction: row;
+        }
+
+        .navbar-nav .nav-item + .nav-item {
+            margin-left: 1rem;
+        }
+
+        .navbar-nav .ml-auto {
+            margin-left: auto;
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            position: relative;
+            left: -25px;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer {
+            padding: 20px 0;
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            margin-top: auto;
+        }
+        .active{
+            color: darkslategray;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Survey App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/feedback"><i class="fas fa-comments"></i> Give Feedback</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a>
+            </li>
+            <li class="nav-item, active">
+                <a class="nav-link" href="/account">
+                    <i class="fas fa-user-circle"></i> <span th:text="${user.username}"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="content-wrapper">
+    <div class="container">
+        <h1>User Account</h1>
+        <form th:action="@{/account/update}" method="post" th:object="${user}">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" th:field="*{username}">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" name="password" th:field="*{password}">
+                    <div class="input-group-append">
+                        <span class="input-group-text toggle-password" onclick="togglePasswordVisibility()">
+                            <i id="togglePasswordIcon" class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>
+
+<div class="footer">
+    <p>&copy; 2024 Survey App. All rights reserved.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("password");
+        var toggleIcon = document.getElementById("togglePasswordIcon");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        }
+    }
+</script>
+</body>
+</html>

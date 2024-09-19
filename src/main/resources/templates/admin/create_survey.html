@@ -1,26 +1,94 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Create Survey</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form div {
+            margin-bottom: 10px;
+        }
+        form label {
+            font-weight: bold;
+        }
+        form input[type="text"], form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button[type="button"] {
+            background-color: #28a745;
+        }
+        form button[type="submit"] {
+            background-color: #007bff;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
     <script>
         function addQuestion() {
             const questionsDiv = document.getElementById('questions');
             const questionIndex = questionsDiv.children.length;
             const questionDiv = document.createElement('div');
             questionDiv.innerHTML = `
-                <div>
+                <div class="form-group">
                     <label>Question ${questionIndex + 1}:</label>
-                    <input type="text" name="questions[${questionIndex}].text" />
-                    <select name="questions[${questionIndex}].type">
+                    <input type="text" name="questions[${questionIndex}].text" class="form-control" required />
+                    <select name="questions[${questionIndex}].type" class="form-control" onchange="toggleAnswers(this, ${questionIndex})">
                         <option value="MULTIPLE_CHOICE">Multiple Choice</option>
                         <option value="SINGLE_CHOICE">Single Choice</option>
                         <option value="OPEN_QUESTION">Open Question</option>
                     </select>
-                    <button type="button" onclick="addAnswer(this, ${questionIndex})">Add Answer</button>
                 </div>
                 <div id="answers-${questionIndex}"></div>
+                <button type="button" id="add-answer-${questionIndex}" onclick="addAnswer(this, ${questionIndex})" class="btn btn-success mt-2">Add Answer</button>
             `;
             questionsDiv.appendChild(questionDiv);
+        }
+
+        function toggleAnswers(select, questionIndex) {
+            const answersDiv = document.getElementById(`answers-${questionIndex}`);
+            const addAnswerButton = document.getElementById(`add-answer-${questionIndex}`);
+
+            if (select.value === "OPEN_QUESTION") {
+                answersDiv.innerHTML = '';
+                addAnswerButton.style.display = 'none';
+            } else {
+                answersDiv.innerHTML = '';
+                addAnswerButton.style.display = 'block';
+            }
         }
 
         function addAnswer(button, questionIndex) {
@@ -28,11 +96,9 @@
             const answerIndex = answersDiv.children.length;
             const answerDiv = document.createElement('div');
             answerDiv.innerHTML = `
-                <div>
+                <div class="form-group">
                     <label>Answer ${answerIndex + 1}:</label>
-                    <input type="text" name="questions[${questionIndex}].answers[${answerIndex}].text" />
-                    <input type="checkbox" name="questions[${questionIndex}].answers[${answerIndex}].correct" />
-                    <label>Correct</label>
+                    <input type="text" name="questions[${questionIndex}].answers[${answerIndex}].text" class="form-control" required />
                 </div>
             `;
             answersDiv.appendChild(answerDiv);
@@ -42,20 +108,20 @@
 <body>
 <h1>Create Survey</h1>
 <form th:action="@{/admin/surveys}" method="post" th:object="${survey}">
-    <div>
+    <div class="form-group">
         <label>Title:</label>
-        <input type="text" th:field="*{title}" />
+        <input type="text" th:field="*{title}" class="form-control" required />
     </div>
-    <div>
+    <div class="form-group">
         <label>Description:</label>
-        <input type="text" th:field="*{description}" />
+        <input type="text" th:field="*{description}" class="form-control" required />
     </div>
     <div id="questions"></div>
-    <div>
-        <button type="button" onclick="addQuestion()">Add Question</button>
+    <div class="form-group">
+        <button type="button" onclick="addQuestion()" class="btn btn-primary">Add Question</button>
     </div>
-    <div>
-        <button type="submit">Create</button>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Create Survey</button>
     </div>
 </form>
 </body>

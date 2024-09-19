@@ -1,30 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Survey Results</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        .navbar-nav {
+            flex-direction: row;
+        }
+        .navbar-nav .nav-item + .nav-item {
+            margin-left: 1rem;
+        }
+        .navbar-nav .ml-auto {
+            margin-left: auto;
+        }
+        .container {
+            padding-top: 20px; /* Adjust as needed */
+        }
+    </style>
 </head>
 <body>
-<h1>Survey Results</h1>
-<table>
-    <thead>
-    <tr>
-        <th>User</th>
-        <th>Question</th>
-        <th>Answer</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="response : ${responses}">
-        <td th:text="${response.user.username}">User</td>
-        <td>
-            <ul>
-                <li th:each="entry : ${response.responses}">
-                    <span th:text="${entry.question.text}"></span>: <span th:text="${entry.answer.text}"></span>
-                </li>
-            </ul>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Survey App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/feedback"><i class="fas fa-comments"></i> Give Feedback</a>
+            </li>
+            <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" th:href="@{/admin/surveys}"><i class="fas fa-comments"></i> Surveys</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/account">
+                    <i class="fas fa-user-circle"></i> <span th:text="${username}"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="text-center mt-4">Survey Results</h1>
+    <table class="table table-bordered mt-4">
+        <thead class="thead-light">
+        <tr>
+            <th>User</th>
+            <th>Question</th>
+            <th>Answer</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over survey responses -->
+        <tr th:each="response : ${responses}">
+            <td th:text="${response.user.username}">User</td>
+            <!-- Display questions and answers -->
+            <td>
+                <ul>
+                    <li th:each="entry : ${response.responses}">
+                        <span th:text="${entry.question != null ? entry.question.text : 'No question'}"></span>:
+                        <span th:text="${entry.answer != null ? entry.answer.text : entry.openText}"></span>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

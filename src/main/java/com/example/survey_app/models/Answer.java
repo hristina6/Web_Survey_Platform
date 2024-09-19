@@ -16,14 +16,13 @@ public class Answer {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    // Default constructor
+
     public Answer() {
     }
 
-    // Constructor with arguments
+
     public Answer(String text) {
         this.text = text;
     }
 
-    // Getters and Setters
 }

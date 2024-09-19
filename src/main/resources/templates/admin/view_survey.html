@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Survey</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .navbar-nav {
+            flex-direction: row;
+        }
+        .navbar-nav .nav-item + .nav-item {
+            margin-left: 1rem;
+        }
+        .navbar-nav .ml-auto {
+            margin-left: auto;
+        }
+        .footer {
+            padding: 20px 0;
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            width: 100%;
+        }
+        .form-check-label {
+            margin-left: 0.5rem;
+        }
+        .survey-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #050518;
+        }
+        .survey-description {
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        .question {
+            margin-bottom: 2rem;
+        }
+        .question h5 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #343a40;
+        }
+        .form-check-input {
+            margin-right: 0.5rem;
+        }
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
+        }
+        .form-control {
+            margin-top: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.2s ease;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+    </style>
+</head>
+<body>
+<!-- Header (Navbar) -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Survey App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/feedback"><i class="fas fa-comments"></i> Give Feedback</a>
+            </li>
+            <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" th:href="@{/admin/surveys}"><i class="fas fa-comments"></i> Surveys</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a>
+            </li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" href="/logout" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            </li>
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Log in</a>
+            </li>
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Sign up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/account">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container main-content">
+    <h1 class="survey-title mt-4" th:text="${survey.title}">Survey Title</h1>
+    <p class="survey-description" th:text="${survey.description}">Survey Description</p>
+    <form th:action="@{/surveys/update/{id}(id=${survey.id})}" method="post">
+        <div th:each="question : ${survey.questions}" class="card p-3 mb-3 question">
+            <h5 th:text="${question.text}">Question Text</h5>
+            <!-- Handle MULTIPLE_CHOICE questions -->
+            <div th:if="${question.type == T(com.example.survey_app.models.QuestionType).MULTIPLE_CHOICE}">
+                <div th:each="answer : ${question.answers}">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" th:name="'question-' + ${question.id}" th:id="'answer-' + ${answer.id}" th:value="${answer.id}">
+                        <label class="form-check-label" th:for="'answer-' + ${answer.id}" th:text="${answer.text}"></label>
+                    </div>
+                </div>
+            </div>
+            <!-- Handle SINGLE_CHOICE questions -->
+            <div th:if="${question.type == T(com.example.survey_app.models.QuestionType).SINGLE_CHOICE}">
+                <div th:each="answer : ${question.answers}">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" th:name="'question-' + ${question.id}" th:id="'answer-' + ${answer.id}" th:value="${answer.id}">
+                        <label class="form-check-label" th:for="'answer-' + ${answer.id}" th:text="${answer.text}"></label>
+                    </div>
+                </div>
+            </div>
+            <!-- Handle OPEN_QUESTION -->
+            <div th:if="${question.type == T(com.example.survey_app.models.QuestionType).OPEN_QUESTION}">
+                <div class="form-group">
+                    <input type="text" class="form-control" th:name="'question-' + ${question.id}" placeholder="Your answer here">
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    </form>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>&copy; 2024 Survey App. All rights reserved.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

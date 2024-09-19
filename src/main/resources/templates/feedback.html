@@ -6,69 +6,60 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .active {
+            color: dimgrey;
+        }
+
         .navbar-nav {
             flex-direction: row;
         }
+
         .navbar-nav .nav-item + .nav-item {
             margin-left: 1rem;
         }
+
         .navbar-nav .ml-auto {
             margin-left: auto;
         }
+
         .container {
             margin-top: 50px;
         }
+
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
             border-color: #0056b3;
         }
+
         .feedback-section {
             margin-top: 100px;
-            margin-bottom: 50px;
+            flex: 1;
         }
+
         .feedback-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
             margin-top: 30px;
         }
-        .feedback-item {
-            display: flex;
-            align-items: center;
-            width: calc(33.333% - 20px);
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
-        .feedback-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #808080;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            font-size: 1.5em;
-            color: white;
-        }
-        .feedback-content {
-            flex-grow: 1;
-        }
+
         .footer {
             padding: 20px 0;
             background-color: #343a40;
             color: #ffffff;
             text-align: center;
-            margin-top: auto;
         }
-        .active {
+
+        .active{
             color: darkslategray;
         }
     </style>
@@ -81,10 +72,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item, active">
+            <li class="nav-item">
                 <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active, active">
                 <a class="nav-link" href="/feedback"><i class="fas fa-comments"></i> Give Feedback</a>
             </li>
             <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
@@ -100,42 +91,36 @@
             <li class="nav-item">
                 <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a>
             </li>
-            <li th:if="${#authorization.expression('isAuthenticated()')}">
-                <a class="nav-link" href="/logout" onclick="return confirm('Are you sure you want to log out?');"><i class="fas fa-sign-out-alt"></i> Log out</a>
-            </li>
-            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+            <li class="nav-item">
                 <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Log in</a>
             </li>
-            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+            <li class="nav-item">
                 <a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Sign up</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/account"><i class="fas fa-user-circle"></i></a>
+                <a class="nav-link" href="/admin/surveys"><i class="fas fa-user-circle"></i></a>
             </li>
         </ul>
     </div>
 </nav>
 
-<div class="container">
-    <div class="jumbotron text-center">
-        <h1>Welcome to Survey App</h1>
-        <p>Create and manage your surveys effortlessly.</p>
-        <a href="/login" class="btn btn-primary btn-lg"><i class="fas fa-plus-circle"></i> Create Survey</a>
-    </div>
-
-    <div class="feedback-section">
-        <h3>Recent Feedback</h3>
-        <div class="feedback-list mt-4">
-            <div th:each="feedback : ${feedbackList}" class="feedback-item">
-                <div class="feedback-avatar" th:text="${feedback.name.substring(0, 1).toUpperCase()}">N</div>
-                <div class="feedback-content">
-                    <h5 th:text="${feedback.name}">Name</h5>
-                    <p th:text="${feedback.comments}">Comments</p>
-                    <small th:text="${feedback.email}">Email</small>
-                </div>
-            </div>
+<div class="container feedback-section">
+    <h2>Website Feedback</h2>
+    <form th:action="@{/feedback}" method="post">
+        <div class="form-group">
+            <label for="feedback-name">Name:</label>
+            <input type="text" class="form-control" id="feedback-name" name="name" placeholder="Enter your name">
         </div>
-    </div>
+        <div class="form-group">
+            <label for="feedback-email">Email:</label>
+            <input type="email" class="form-control" id="feedback-email" name="email" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label for="feedback-comments">Comments:</label>
+            <textarea class="form-control" id="feedback-comments" name="comments" rows="4" placeholder="Enter your feedback"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
 </div>
 
 <div class="footer">

@@ -24,7 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -34,13 +33,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .failureUrl("/login?error=true") // Redirect to /login?error=true on authentication failure
+                .failureUrl("/login?error=true")
                 .successHandler(successHandler())
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .logoutUrl("/logout") // Specify the logout URL
+                .logoutSuccessUrl("/") // Redirect to the home page after logout
+                .permitAll()
+                .and()
+                .csrf().disable(); // Disable CSRF for simplicity in this example; consider enabling in production
     }
+
 
 
     @Bean

@@ -7,6 +7,8 @@ import com.example.survey_app.service.SurveyResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SurveyResponseServiceImpl implements SurveyResponseService {
 
@@ -16,5 +18,10 @@ public class SurveyResponseServiceImpl implements SurveyResponseService {
     @Override
     public void saveResponse(SurveyResponse response) {
         surveyResponseRepository.save(response);
+    }
+
+    @Override
+    public List<SurveyResponse> getResponsesBySurveyId(Long surveyId) {
+        return surveyResponseRepository.findBySurveyId(surveyId);
     }
 }

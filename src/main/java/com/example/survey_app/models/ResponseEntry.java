@@ -1,6 +1,7 @@
 package com.example.survey_app.models;
 
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ public class ResponseEntry {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "survey_response_id")
+    @JoinColumn(name = "response_id")
     private SurveyResponse surveyResponse;
 
     @ManyToOne
@@ -22,4 +23,7 @@ public class ResponseEntry {
     @ManyToOne
     @JoinColumn(name = "answer_id")
     private Answer answer;
+
+    private String openText;
 }
+
