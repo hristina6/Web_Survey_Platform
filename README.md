@@ -6,6 +6,7 @@ Web Platform for creating and managing surveys with role-based access control. T
 **Role-Based Access**: 
   - Admins can design surveys, publish them, and analyze the responses.
   - Users can submit response.
+    
 - **Dynamic UI**: Thymeleaf (server-side) and JavaScript (client-side)
 ## Technologies:
 - Backend: Java Spring Boot 
