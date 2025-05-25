@@ -1,5 +1,6 @@
 # Web Platform for Surveys
 Web Platform for creating and managing surveys with role-based access control. This project provides interface for users to design custom surveys and collect responses.
+## Features
 **Survey Creation**: Design surveys with multiple question types (MCQ, text, ratings).
 - **Role-Based Access**: 
   - **Admins**: Create/manage surveys, view analytics.
